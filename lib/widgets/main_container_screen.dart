@@ -69,7 +69,7 @@ import '../screens/dashboard/home_screen.dart' show HomeScreen;
 // import 'message_screen.dart';
 
 class MainContainerScreen extends StatefulWidget {
-  const MainContainerScreen({Key? key}) : super(key: key);
+  const MainContainerScreen({super.key});
 
   @override
   State<MainContainerScreen> createState() => _MainContainerScreenState();

@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import '../theme/theme.dart';
+// import '../theme/theme.dart';
 
 enum ButtonType { primary, outline }
 
@@ -40,12 +41,14 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
-    final Color defaultBackgroundColor =
-        type == ButtonType.primary ? AppColors.brown : Colors.transparent;
+    final Color defaultBackgroundColor = type == ButtonType.primary
+        ? Colors.deepOrange.shade400
+        : Colors.transparent;
     final Color defaultTextColor =
-        type == ButtonType.primary ? Colors.white : AppColors.brown;
-    final Color defaultBorderColor = AppColors.brown;
+        type == ButtonType.primary ? Colors.white : Colors.deepOrange.shade400;
+    final Color defaultBorderColor = Colors.deepOrange.shade400;
 
     return SizedBox(
       width: width,
@@ -65,6 +68,11 @@ class CustomButton extends StatelessWidget {
                   : Colors.transparent,
             ),
           ),
+        ).copyWith(
+          elevation: MaterialStateProperty.all(
+              5), // Adding a subtle elevation (shadow)
+          shadowColor: MaterialStateProperty.all(
+              isDarkMode ? Colors.black45 : Colors.grey.withOpacity(0.3)),
         ),
         child: isLoading
             ? const SizedBox(

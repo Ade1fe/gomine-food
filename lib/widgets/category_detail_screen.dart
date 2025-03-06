@@ -4,15 +4,61 @@
 
 // import 'app_scaffold.dart' show AppScaffold;
 
+// // Custom search field widget
+// class CustomSearchField extends StatelessWidget {
+//   final TextEditingController controller;
+//   final String hintText;
+//   final Function(String) onChanged;
+//   final VoidCallback onClear;
+//   final Color backgroundColor;
+
+//   const CustomSearchField({
+//     super.key,
+//     required this.controller,
+//     required this.hintText,
+//     required this.onChanged,
+//     required this.onClear,
+//     this.backgroundColor = Colors.white,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 50,
+//       decoration: BoxDecoration(
+//         color: backgroundColor,
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: TextField(
+//         controller: controller,
+//         onChanged: onChanged,
+//         decoration: InputDecoration(
+//           hintText: hintText,
+//           prefixIcon: const Icon(Icons.search, color: Colors.grey),
+//           suffixIcon: controller.text.isNotEmpty
+//               ? IconButton(
+//                   icon: const Icon(Icons.clear, color: Colors.grey),
+//                   onPressed: onClear,
+//                 )
+//               : null,
+//           border: InputBorder.none,
+//           contentPadding:
+//               const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 // class CategoryDetailScreen extends StatefulWidget {
 //   final dynamic category;
 //   final String cookingTime;
 
 //   const CategoryDetailScreen({
-//     Key? key,
+//     super.key,
 //     required this.category,
 //     required this.cookingTime,
-//   }) : super(key: key);
+//   });
 
 //   @override
 //   State<CategoryDetailScreen> createState() => _CategoryDetailScreenState();
@@ -60,7 +106,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: Colors.grey[50],
+//       backgroundColor: Colors.white,
 //       body: CustomScrollView(
 //         physics: const BouncingScrollPhysics(),
 //         slivers: [
@@ -93,7 +139,9 @@
 //     return SliverAppBar(
 //       expandedHeight: 280,
 //       pinned: true,
-//       backgroundColor: Theme.of(context).primaryColor,
+//       backgroundColor: Colors.white,
+//       foregroundColor: Colors.black,
+//       // backgroundColor: Theme.of(context).primaryColor,
 //       elevation: 0,
 //       leading: Padding(
 //         padding: const EdgeInsets.all(8.0),
@@ -284,7 +332,7 @@
 //         Row(
 //           children: [
 //             const Text(
-//               'Description',
+//               'Descriptionsss',
 //               style: TextStyle(
 //                 fontSize: 20,
 //                 fontWeight: FontWeight.bold,
@@ -330,7 +378,7 @@
 
 //   String _truncateDescription(String description) {
 //     if (description.length > 200) {
-//       return description.substring(0, 200) + '...';
+//       return '${description.substring(0, 200)}...';
 //     }
 //     return description;
 //   }
@@ -625,53 +673,117 @@
 // }
 
 // // New screen for "View All" functionality
-// class AllMealsScreen extends StatelessWidget {
+// class AllMealsScreen extends StatefulWidget {
 //   final dynamic category;
 //   final List<dynamic> meals;
 
 //   const AllMealsScreen({
-//     Key? key,
+//     super.key,
 //     required this.category,
 //     required this.meals,
-//   }) : super(key: key);
+//   });
+
+//   @override
+//   State<AllMealsScreen> createState() => _AllMealsScreenState();
+// }
+
+// class _AllMealsScreenState extends State<AllMealsScreen> {
+//   final TextEditingController _searchController = TextEditingController();
+//   List<dynamic> filteredMeals = [];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     filteredMeals = List.from(widget.meals);
+//   }
+
+//   void _filterMeals(String query) {
+//     setState(() {
+//       if (query.isEmpty) {
+//         filteredMeals = List.from(widget.meals);
+//       } else {
+//         filteredMeals = widget.meals
+//             .where((meal) => meal['strMeal']
+//                 .toString()
+//                 .toLowerCase()
+//                 .contains(query.toLowerCase()))
+//             .toList();
+//       }
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _searchController.dispose();
+//     super.dispose();
+//   }
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return AppScaffold(
 //       appBar: AppBar(
-//         title: Text('All ${category.strCategory} Dishes'),
-//         backgroundColor: Theme.of(context).primaryColor,
+//         title: Text(
+//           'All ${widget.category.strCategory} Dishes',
+//           style: TextStyle(
+//               fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+//         ),
+//         backgroundColor: Colors.white,
+//         foregroundColor: Colors.black,
+//         elevation: 0,
 //       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(1.0),
-//         child: meals.isEmpty
-//             ? Center(
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     const Icon(Icons.restaurant, size: 64, color: Colors.grey),
-//                     const SizedBox(height: 16),
-//                     Text(
-//                       'No ${category.strCategory} dishes found',
-//                       style: const TextStyle(fontSize: 18),
-//                       textAlign: TextAlign.center,
+//       body: Column(
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.all(16.0),
+//             child: CustomSearchField(
+//               controller: _searchController,
+//               hintText: 'Search for food...',
+//               onChanged: (query) {
+//                 _filterMeals(query);
+//               },
+//               onClear: () {
+//                 _searchController.clear();
+//                 _filterMeals('');
+//               },
+//               backgroundColor: const Color.fromARGB(235, 100, 82, 73),
+//             ),
+//           ),
+//           Expanded(
+//             child: Padding(
+//               padding: const EdgeInsets.all(5.0),
+//               child: filteredMeals.isEmpty
+//                   ? Center(
+//                       child: Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           const Icon(Icons.search_off,
+//                               size: 64, color: Colors.grey),
+//                           const SizedBox(height: 16),
+//                           Text(
+//                             'No ${widget.category.strCategory} dishes found matching your search',
+//                             style: const TextStyle(fontSize: 18),
+//                             textAlign: TextAlign.center,
+//                           ),
+//                         ],
+//                       ),
+//                     )
+//                   : GridView.builder(
+//                       gridDelegate:
+//                           const SliverGridDelegateWithFixedCrossAxisCount(
+//                         crossAxisCount: 2,
+//                         childAspectRatio: 0.8,
+//                         crossAxisSpacing: 16,
+//                         mainAxisSpacing: 16,
+//                       ),
+//                       itemCount: filteredMeals.length,
+//                       itemBuilder: (context, index) {
+//                         final meal = filteredMeals[index];
+//                         return _buildMealCard(meal, context);
+//                       },
 //                     ),
-//                   ],
-//                 ),
-//               )
-//             : GridView.builder(
-//                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                   crossAxisCount: 2,
-//                   childAspectRatio: 0.8,
-//                   crossAxisSpacing: 16,
-//                   mainAxisSpacing: 16,
-//                 ),
-//                 itemCount: meals.length,
-//                 itemBuilder: (context, index) {
-//                   final meal = meals[index];
-//                   return _buildMealCard(meal, context);
-//                 },
-//               ),
+//             ),
+//           ),
+//         ],
 //       ),
 //     );
 //   }
@@ -813,6 +925,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'app_scaffold.dart' show AppScaffold;
+import 'recipe_detail_screen.dart' show RecipeDetailScreen;
 
 // Custom search field widget
 class CustomSearchField extends StatelessWidget {
@@ -823,13 +936,13 @@ class CustomSearchField extends StatelessWidget {
   final Color backgroundColor;
 
   const CustomSearchField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     required this.onChanged,
     required this.onClear,
     this.backgroundColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -838,16 +951,25 @@ class CustomSearchField extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+          hintStyle: TextStyle(color: Colors.grey.shade600),
+          prefixIcon: const Icon(Icons.search, color: Colors.deepOrange),
           suffixIcon: controller.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear, color: Colors.grey),
+                  icon: const Icon(Icons.clear, color: Colors.deepOrange),
                   onPressed: onClear,
                 )
               : null,
@@ -865,10 +987,10 @@ class CategoryDetailScreen extends StatefulWidget {
   final String cookingTime;
 
   const CategoryDetailScreen({
-    Key? key,
+    super.key,
     required this.category,
     required this.cookingTime,
-  }) : super(key: key);
+  });
 
   @override
   State<CategoryDetailScreen> createState() => _CategoryDetailScreenState();
@@ -879,6 +1001,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
   bool isLoading = true;
   String errorMessage = '';
   bool isDescriptionExpanded = false;
+  final Color primaryColor = Colors.deepOrange;
 
   @override
   void initState() {
@@ -916,14 +1039,14 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey.shade50,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           _buildAppBar(context),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -951,7 +1074,6 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       pinned: true,
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
-      // backgroundColor: Theme.of(context).primaryColor,
       elevation: 0,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -972,7 +1094,10 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
               icon: const Icon(Icons.favorite_border, color: Colors.white),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Added to favorites')),
+                  SnackBar(
+                    content: const Text('Added to favorites'),
+                    backgroundColor: primaryColor,
+                  ),
                 );
               },
             ),
@@ -986,8 +1111,10 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
               icon: const Icon(Icons.share, color: Colors.white),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('Share functionality coming soon')),
+                  SnackBar(
+                    content: const Text('Share functionality coming soon'),
+                    backgroundColor: primaryColor,
+                  ),
                 );
               },
             ),
@@ -1033,6 +1160,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                           ? loadingProgress.cumulativeBytesLoaded /
                               loadingProgress.expectedTotalBytes!
                           : null,
+                      color: primaryColor,
                     ),
                   ),
                 );
@@ -1064,20 +1192,20 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.2),
+            color: primaryColor.withOpacity(0.2),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.orange),
+              Icon(Icons.access_time, size: 16, color: primaryColor),
               const SizedBox(width: 4),
               Text(
                 widget.cookingTime,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: primaryColor,
                 ),
               ),
             ],
@@ -1088,20 +1216,24 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.2),
+            color: primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: primaryColor.withOpacity(0.3),
+              width: 1,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.star, size: 16, color: Colors.green),
-              SizedBox(width: 4),
+            children: [
+              const Icon(Icons.star, size: 16, color: Colors.amber),
+              const SizedBox(width: 4),
               Text(
                 '4.8',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: primaryColor,
                 ),
               ),
             ],
@@ -1112,20 +1244,24 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.2),
+            color: primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: primaryColor.withOpacity(0.3),
+              width: 1,
+            ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.trending_up, size: 16, color: Colors.blue),
-              SizedBox(width: 4),
+            children: [
+              Icon(Icons.trending_up, size: 16, color: primaryColor),
+              const SizedBox(width: 4),
               Text(
                 'Medium',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: primaryColor,
                 ),
               ),
             ],
@@ -1136,117 +1272,157 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
   }
 
   Widget _buildDescriptionSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Description',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Description',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                ),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    isDescriptionExpanded = !isDescriptionExpanded;
+                  });
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: primaryColor,
+                ),
+                child: Text(isDescriptionExpanded ? 'Show Less' : 'Read More'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          AnimatedCrossFade(
+            firstChild: Text(
+              _truncateDescription(widget.category.strCategoryDescription),
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.5,
+                color: Colors.black87,
               ),
             ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isDescriptionExpanded = !isDescriptionExpanded;
-                });
-              },
-              child: Text(isDescriptionExpanded ? 'Show Less' : 'Read More'),
+            secondChild: Text(
+              widget.category.strCategoryDescription,
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.5,
+                color: Colors.black87,
+              ),
             ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        AnimatedCrossFade(
-          firstChild: Text(
-            _truncateDescription(widget.category.strCategoryDescription),
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              color: Colors.black87,
-            ),
+            crossFadeState: isDescriptionExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
           ),
-          secondChild: Text(
-            widget.category.strCategoryDescription,
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              color: Colors.black87,
-            ),
-          ),
-          crossFadeState: isDescriptionExpanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          duration: const Duration(milliseconds: 300),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   String _truncateDescription(String description) {
     if (description.length > 200) {
-      return description.substring(0, 200) + '...';
+      return '${description.substring(0, 200)}...';
     }
     return description;
   }
 
   Widget _buildPopularDishesSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Popular ${widget.category.strCategory} Dishes',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllMealsScreen(
-                      category: widget.category,
-                      meals: meals,
-                    ),
-                  ),
-                );
-              },
-              child: const Text('View All'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (isLoading)
-          _buildLoadingGrid()
-        else if (errorMessage.isNotEmpty)
-          _buildErrorMessage()
-        else if (meals.isEmpty)
-          _buildEmptyState()
-        else
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.8,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: meals.length > 6 ? 6 : meals.length, // Limit to 6 items
-            itemBuilder: (context, index) {
-              final meal = meals[index];
-              return _buildMealCard(meal, context);
-            },
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
           ),
-      ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Popular ${widget.category.strCategory} Dishes',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AllMealsScreen(
+                        category: widget.category,
+                        meals: meals,
+                        primaryColor: primaryColor,
+                      ),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: primaryColor,
+                ),
+                child: const Text('View All'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (isLoading)
+            _buildLoadingGrid()
+          else if (errorMessage.isNotEmpty)
+            _buildErrorMessage()
+          else if (meals.isEmpty)
+            _buildEmptyState()
+          else
+            GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.8,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount:
+                  meals.length > 6 ? 6 : meals.length, // Limit to 6 items
+              itemBuilder: (context, index) {
+                final meal = meals[index];
+                return _buildMealCard(meal, context);
+              },
+            ),
+        ],
+      ),
     );
   }
 
@@ -1264,11 +1440,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: Colors.grey[200],
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Center(
-            child: CircularProgressIndicator(),
+          child: Center(
+            child: CircularProgressIndicator(
+              color: primaryColor,
+            ),
           ),
         );
       },
@@ -1295,6 +1473,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
               });
               fetchMealsByCategory();
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             child: const Text('Try Again'),
           ),
         ],
@@ -1306,7 +1491,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
     return Center(
       child: Column(
         children: [
-          const Icon(Icons.restaurant, size: 48, color: Colors.grey),
+          Icon(Icons.restaurant,
+              size: 48, color: primaryColor.withOpacity(0.5)),
           const SizedBox(height: 16),
           Text(
             'No ${widget.category.strCategory} dishes found',
@@ -1325,9 +1511,16 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
 
     return GestureDetector(
       onTap: () {
-        // Navigate to meal detail screen (not implemented)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Selected: ${meal['strMeal']}')),
+        // Navigate to meal detail screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailScreen(
+              mealId: meal['idMeal'],
+              mealName: meal['strMeal'],
+              mealImage: meal['strMealThumb'],
+            ),
+          ),
         );
       },
       child: Container(
@@ -1373,6 +1566,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                   ? loadingProgress.cumulativeBytesLoaded /
                                       loadingProgress.expectedTotalBytes!
                                   : null,
+                              color: primaryColor,
                             ),
                           ),
                         );
@@ -1388,6 +1582,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1407,40 +1608,57 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                         ),
                       ),
                     ),
+                    // Cooking time badge
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.access_time,
+                                  size: 14, color: Colors.white),
+                              const SizedBox(width: 4),
+                              Text(
+                                cookingTime,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
               // Meal info
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      meal['strMeal'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time,
-                            size: 14, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Text(
-                          cookingTime,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                child: Text(
+                  meal['strMeal'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -1455,20 +1673,26 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Explore recipes feature coming soon!'),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AllMealsScreen(
+                category: widget.category,
+                meals: meals,
+                primaryColor: primaryColor,
+              ),
             ),
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
-          elevation: 2,
+          elevation: 4,
+          shadowColor: primaryColor.withOpacity(0.4),
         ),
         child: Text(
           'Explore All ${widget.category.strCategory} Recipes',
@@ -1486,12 +1710,14 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
 class AllMealsScreen extends StatefulWidget {
   final dynamic category;
   final List<dynamic> meals;
+  final Color primaryColor;
 
   const AllMealsScreen({
-    Key? key,
+    super.key,
     required this.category,
     required this.meals,
-  }) : super(key: key);
+    required this.primaryColor,
+  });
 
   @override
   State<AllMealsScreen> createState() => _AllMealsScreenState();
@@ -1534,8 +1760,11 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
       appBar: AppBar(
         title: Text(
           'All ${widget.category.strCategory} Dishes',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -1543,8 +1772,19 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
       ),
       body: Column(
         children: [
-          Padding(
+          Container(
             padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
             child: CustomSearchField(
               controller: _searchController,
               hintText: 'Search for food...',
@@ -1555,24 +1795,40 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
                 _searchController.clear();
                 _filterMeals('');
               },
-              backgroundColor: const Color.fromARGB(235, 243, 232, 227),
+              backgroundColor: Colors.grey.shade200,
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(6.0),
               child: filteredMeals.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.search_off,
-                              size: 64, color: Colors.grey),
+                          Icon(Icons.search_off,
+                              size: 64,
+                              color: widget.primaryColor.withOpacity(0.5)),
                           const SizedBox(height: 16),
                           Text(
                             'No ${widget.category.strCategory} dishes found matching your search',
                             style: const TextStyle(fontSize: 18),
                             textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton(
+                            onPressed: () {
+                              _searchController.clear();
+                              _filterMeals('');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: widget.primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text('Clear Search'),
                           ),
                         ],
                       ),
@@ -1605,9 +1861,16 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
 
     return GestureDetector(
       onTap: () {
-        // Navigate to meal detail screen (not implemented)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Selected: ${meal['strMeal']}')),
+        // Navigate to meal detail screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetailScreen(
+              mealId: meal['idMeal'],
+              mealName: meal['strMeal'],
+              mealImage: meal['strMealThumb'],
+            ),
+          ),
         );
       },
       child: Container(
@@ -1653,6 +1916,7 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
                                   ? loadingProgress.cumulativeBytesLoaded /
                                       loadingProgress.expectedTotalBytes!
                                   : null,
+                              color: widget.primaryColor,
                             ),
                           ),
                         );
@@ -1668,6 +1932,13 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -1687,40 +1958,57 @@ class _AllMealsScreenState extends State<AllMealsScreen> {
                         ),
                       ),
                     ),
+                    // Cooking time badge
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.access_time,
+                                  size: 14, color: Colors.white),
+                              const SizedBox(width: 4),
+                              Text(
+                                cookingTime,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
               // Meal info
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      meal['strMeal'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(Icons.access_time,
-                            size: 14, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Text(
-                          cookingTime,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                child: Text(
+                  meal['strMeal'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

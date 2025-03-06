@@ -1,5 +1,5 @@
+
 import 'package:flutter/material.dart';
-import '../theme/theme.dart';
 
 class CustomSearchField extends StatelessWidget {
   final TextEditingController? controller;
@@ -26,56 +26,89 @@ class CustomSearchField extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    return TextFormField(
-      controller: controller,
-      autofocus: autofocus ?? false,
-      onChanged: onChanged,
-      style: AppTextStyles.body.copyWith(
-        color: isDarkMode ? AppColors.textPrimary : AppColors.textSecondary,
-      ),
-      decoration: decoration ??
-          InputDecoration(
-            hintText: hintText ?? 'Search...',
-            hintStyle: AppTextStyles.body.copyWith(
-              color:
-                  isDarkMode ? AppColors.textSecondary : AppColors.textPrimary,
-            ),
-            prefixIcon: Icon(
-              Icons.search,
-              color: isDarkMode ? AppColors.primary : AppColors.secondary,
-            ),
-            suffixIcon: controller?.text.isNotEmpty ?? false
-                ? IconButton(
-                    icon: Icon(
-                      Icons.clear,
-                      color:
-                          isDarkMode ? AppColors.primary : AppColors.secondary,
-                    ),
-                    onPressed: onClear,
-                  )
-                : null,
-            filled: true,
-            fillColor: backgroundColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  BorderSide(color: const Color.fromARGB(235, 237, 206, 194)
-                      // isDarkMode ? AppColors.primary : AppColors.secondary,
-                      ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: isDarkMode
-                    ? AppColors.primary
-                    : const Color.fromARGB(235, 237, 206, 194),
-                width: 2,
-              ),
-            ),
+    return Container(
+      // Container to wrap the search field and provide box shadow.
+      decoration: BoxDecoration(
+        color: Colors.white, // White background for the search box.
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode
+                ? Colors.black.withOpacity(0.2)
+                : Colors.grey.withOpacity(0.3),
+            blurRadius: 6,
+            offset: Offset(0, 2),
           ),
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        autofocus: autofocus ?? false,
+        onChanged: onChanged,
+        style: TextStyle(
+          color: isDarkMode
+              ? Colors.white
+              : Colors
+                  .black, 
+        ),
+        decoration: decoration ??
+            InputDecoration(
+              hintText: hintText ?? 'Search...',
+              hintStyle: TextStyle(
+                color: isDarkMode
+                    ? Colors.white.withOpacity(0.7)
+                    : Colors.black.withOpacity(0.6),
+                fontSize: 16,
+              ),
+              prefixIcon: Icon(
+                Icons.search,
+                color: isDarkMode
+                    ? Colors.white
+                    : Colors
+                        .black, 
+              ),
+              suffixIcon: controller?.text.isNotEmpty ?? false
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: isDarkMode
+                            ? Colors.white.withOpacity(0.8)
+                            : Colors.black.withOpacity(0.8),
+                      ),
+                      onPressed: onClear,
+                    )
+                  : null,
+              filled: true,
+              fillColor: backgroundColor ??
+                  Colors.white, // White background for the search box
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: isDarkMode
+                      ? Colors.white70
+                      : Colors.black26, // Border color changes for dark mode
+                  width: 1.5,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: isDarkMode ? Colors.white70 : Colors.black26,
+                  width: 1.5,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: isDarkMode ? Colors.white : Colors.deepOrange.shade400,
+                  width: 0.1,
+                ),
+              ),
+              // Add box shadow
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
+            ),
+      ),
     );
   }
 }

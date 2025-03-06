@@ -450,10 +450,10 @@ class BottomNavigation extends StatefulWidget {
   final Function(int) onTabChanged;
 
   const BottomNavigation({
-    Key? key,
+    super.key,
     this.initialIndex = 0,
     required this.onTabChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
@@ -592,12 +592,12 @@ class BottomNavigationWithBadges extends StatefulWidget {
   final int unreadMessageCount;
 
   const BottomNavigationWithBadges({
-    Key? key,
+    super.key,
     this.initialIndex = 0,
     required this.onTabChanged,
     this.cartItemCount = 0,
     this.unreadMessageCount = 0,
-  }) : super(key: key);
+  });
 
   @override
   State<BottomNavigationWithBadges> createState() =>
